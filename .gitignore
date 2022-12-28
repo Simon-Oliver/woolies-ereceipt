@@ -1,0 +1,5 @@
+*.json
+.env
+.gitignore
+/.idea
+/venv
