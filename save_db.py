@@ -1,6 +1,7 @@
 import sqlite3
 import json
 import re
+import db_util
 
 # with open('receipts.json') as f:
 #     data = json.load(f)
@@ -9,12 +10,12 @@ import re
 
 with open('data.json') as f:
     data = json.load(f)
-    first_re = data[0]
-    receipt_url = first_re['data']['receiptDetails']['download']['url']
-    receipt_total = ''
-    storeNo = ''
-    storetitle = ''
-    storeAdr = ''
+    # first_re = data[0]
+    # receipt_url = first_re['data']['receiptDetails']['download']['url']
+    # receipt_total = ''
+    # storeNo = ''
+    # storetitle = ''
+    # storeAdr = ''
 
     items = []
 
@@ -25,12 +26,31 @@ with open('data.json') as f:
 
     for x in data:
         total = 0;
+        # storeNo,title,content,division
+        storeNo = ''
+        title = ''
+        content = ''
+        division = ''
+
+        # receipt_id,receipt_date,receipt_total,storeNo,raw_data
+        receipt_id = ''
+        receipt_date = ''
+        receipt_total = ''
+        raw_data = x
+
+        # receipt_id,item_name,item_qty,item_unit,item_total,raw_data
+        item_name = ''
+        item_qty = ''
+        item_unit = ''
+        item_total = ''
+
         for item in x['data']['receiptDetails']['details']:
             # print(json.dumps(x['data']['receiptDetails']['details'], indent=4))
             if item['__typename'] == 'ReceiptDetailsHeader':
                 storeNo = item['storeNo']
-                storetitle = item['title']
-                storeAdr = item['content']
+                title = item['title']
+                content = item['content']
+                division = item['division']
             elif item['__typename'] == 'ReceiptDetailsTotal':
                 receipt_total = item['total']
             elif item['__typename'] == 'ReceiptDetailsFooter':

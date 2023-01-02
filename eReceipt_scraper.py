@@ -6,6 +6,9 @@ import sqlite3
 from dotenv import load_dotenv
 load_dotenv()
 
+conn = sqlite3.connect("receipt_data.db")
+c = conn.cursor()
+
 receipt_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/graphql'
 token_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/token'
 
@@ -41,15 +44,19 @@ def get_receipts():
     print(receipts_response.json())
     return receipts_response.json()
 
-receipt_ids = []
+query = "SELECT receipt_id FROM receipt"
 
-for receipt in receipts:
-    for item in receipt['items']:
-        try:
-            if item['receipt']:
-                receipt_ids.append(item['id'])
-        except Exception as e:
-            print(e)
+c.execute(query)
+data = c.fetchall()
+receipt_ids = [item[0] for item in data]
+
+# for receipt in receipts:
+#     for item in receipt['items']:
+#         try:
+#             if item['receipt']:
+#                 receipt_ids.append(item['id'])
+#         except Exception as e:
+#             print(e)
 
 print(receipt_ids)
 
@@ -62,8 +69,10 @@ for r in data_new_receipts['data']['rewardsActivityFeed']['list']['groups'][1:-1
                 new_items.append(item['id'])
         except Exception as e:
             print(e)
-print('Old Items', len(receipt_ids))
-print('New Items',len(new_items))
+
+print(new_items)
+print('Old Items', len(set(receipt_ids)))
+print('New Items',len(set(new_items)))
 print("Overlap",set(new_items).difference(set(receipt_ids)))
 
 

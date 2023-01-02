@@ -3,3 +3,5 @@
 .gitignore
 /.idea
 /venv
+*.db
+__pycache__/
