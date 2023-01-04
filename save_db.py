@@ -8,7 +8,7 @@ import db_util
 #     receipts = data['data']['rewardsActivityFeed']['list']['groups'][1:-1]
 #     print(receipts)
 
-with open('data.json') as f:
+with open('data/data.json') as f:
     data = json.load(f)
     # first_re = data[0]
     # receipt_url = first_re['data']['receiptDetails']['download']['url']

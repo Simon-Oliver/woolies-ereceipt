@@ -3,10 +3,11 @@ import requests
 import json
 import os
 import sqlite3
+from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-conn = sqlite3.connect("receipt_data.db")
+conn = sqlite3.connect("data/back_up_receipt_data.db")
 c = conn.cursor()
 
 receipt_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/graphql'
@@ -25,10 +26,11 @@ def refresh_token(ref_token):
 
 refresh_token(os.environ.get("REFRESH_TOKEN"))
 
-
+# get current date and time
+current_datetime = datetime.now()
 
 # Opening JSON file
-with open('receipts.json') as f:
+with open('data/receipts.json') as f:
     # returns JSON object as
     # a dictionary
     data = json.load(f)
