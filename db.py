@@ -2,6 +2,7 @@
 
 import sqlite3
 
+
 def initialise_db():
     conn = sqlite3.connect("data/receipt_data.db")
     c = conn.cursor()
