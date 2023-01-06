@@ -12,9 +12,9 @@ receipt_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/g
 token_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/token'
 
 
-def save_raw_json():
+def save_raw_json_to_file():
     refresh_token(os.environ.get("REFRESH_TOKEN"))
-    res = get_list()
+    res = get_list_of_receipts()
 
     # get current date and time
     current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -74,7 +74,7 @@ def refresh_token(ref_token: str):
     dotenv.set_key('.env', 'ACCESS_TOKEN', os.environ['ACCESS_TOKEN'])
 
 
-def get_list():
+def get_list_of_receipts():
     bearer_token = f"Bearer {os.environ.get('ACCESS_TOKEN')}"
     headers = {"Content-Type": "application/json; charset=utf-8", "authorization": bearer_token,
                "x-api-key": os.environ.get("API_KEY")}
@@ -101,11 +101,10 @@ def get_list():
                  "statusMarkUrl\n            showStatusMark\n         }\n    }\n}\n}",
         "variables": {"page": 1}}
     receipts_response = requests.post(receipt_url, headers=headers, json=receipts_query)
-    # print(receipts_response.json())
     return receipts_response.json()
 
 
-def get_receipt(receipt_id):
+def get_receipt_by_id(receipt_id):
     try:
         receipt_query = {
             "query": "query ReceiptDetails($receiptId: String!) {\n    receiptDetails(receiptId: $receiptId) {\n      "
