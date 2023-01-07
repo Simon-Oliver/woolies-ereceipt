@@ -75,7 +75,7 @@ def get_data(receipt_id, items):
         for item in items['data']['receiptDetails']['details']:
             # print(json.dumps(item, indent=4))
             if item['__typename'] == 'ReceiptDetailsHeader':
-                store_no = item['store_no']
+                store_no = item['storeNo']
                 title = item['title']
                 content = item['content']
                 division = item['division']

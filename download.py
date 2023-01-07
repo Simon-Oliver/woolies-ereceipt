@@ -11,7 +11,6 @@ load_dotenv()
 receipt_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/graphql'
 token_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/token'
 
-
 def save_raw_json_to_file():
     refresh_token(os.environ.get("REFRESH_TOKEN"))
     res = get_list_of_receipts()
