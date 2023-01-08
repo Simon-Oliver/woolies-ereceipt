@@ -8,9 +8,14 @@ download.refresh_token(os.environ.get("REFRESH_TOKEN"))
 res = download.get_list_of_receipts()
 
 receipt_list = db_util.get_receipts_from_response(res)
+print(f'Found {len(receipt_list)} receipts.')
 
 new_receipts = db_util.get_new_receipt_ids(receipt_list)
-print(f'Found {len(new_receipts)} new receipts.')
+# The below line is used for the initialisation of the db.
+# This is neccessary because ID's were not unique for a period of time
+# new_receipts = [item['id'] for item in receipt_list]
+
+print(f'{len(new_receipts)} are new receipts.')
 for index, receipt in enumerate(receipt_list):
     if receipt['id'] in new_receipts:
         receipt_res = download.get_receipt_by_id(receipt['receipt']['receiptId'])
@@ -22,6 +27,6 @@ for index, receipt in enumerate(receipt_list):
         for item in receipt_items:
             db_util.add_item(*item)
 
-        print(f'Saved Receipt {receipt["id"]}')
+        print(f'{index}: Saved Receipt {receipt["id"]}')
 
 db_util.commit_close()
