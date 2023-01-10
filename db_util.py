@@ -5,7 +5,6 @@ from datetime import datetime
 conn = sqlite3.connect("data/receipt_data.db")
 c = conn.cursor()
 
-
 def commit_close():
     conn.commit()
     conn.close()
@@ -109,9 +108,11 @@ def get_list_of_line_items(receipt_id, item):
 
     return receipt_items
 
-def get_iso_date_from_string(date_str:str):
+
+def get_iso_date_from_string(date_str: str):
     d = datetime.strptime(date_str, '%d/%m/%Y')
     return d.strftime("%Y-%m-%d")
+
 
 def get_data(receipt_id, items):
     # receipt_id,receipt_date,receipt_total,store_no,raw_data
@@ -177,3 +178,30 @@ def initialise_db():
 
     conn.commit()
     conn.close()
+
+def run_sql_query(query):
+    conn = sqlite3.connect("data/receipt_data.db")
+    c = conn.cursor()
+
+    c.execute(query)
+    data = c.fetchall()
+    conn.close()
+    return [item for item in data]
+
+def get_total_expenses_by_month():
+    query = """
+    SELECT COUNT(*) id, strftime('%Y-%m', receipt_date) year_month, sum(receipt_total)
+    FROM receipt
+    GROUP BY year_month
+    ORDER BY year_month DESC
+    """
+    return run_sql_query(query)
+
+def get_total_amount_by_item():
+    query = """
+        SELECT COUNT(*) id, strftime('%Y-%m', receipt_date) year_month, sum(receipt_total)
+        FROM receipt
+        GROUP BY year_month
+        ORDER BY year_month DESC
+        """
+    return run_sql_query(query)
