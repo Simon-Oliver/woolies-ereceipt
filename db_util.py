@@ -5,6 +5,7 @@ from datetime import datetime
 conn = sqlite3.connect("data/receipt_data.db")
 c = conn.cursor()
 
+
 def commit_close():
     conn.commit()
     conn.close()
@@ -86,6 +87,7 @@ def get_list_of_line_items(receipt_id, item):
 
             if 'Qty' in next_item['description']:
                 item_qty = float(next_item['description'].split(" ")[1])
+                item_unit = "pc"
             elif 'NET @' in next_item['description']:
                 item_qty = float(next_item['description'].split(" ")[0])
                 item_unit = next_item['description'].split(" ")[1]
@@ -102,7 +104,7 @@ def get_list_of_line_items(receipt_id, item):
             item_name = e['description']
             item_total = float(e['amount'])
             item_qty = 1
-            item_unit = ''
+            item_unit = 'pc'
 
             receipt_items.append((receipt_id, item_name, item_qty, item_unit, item_total, raw_data))
 
@@ -179,6 +181,7 @@ def initialise_db():
     conn.commit()
     conn.close()
 
+
 def run_sql_query(query):
     conn = sqlite3.connect("data/receipt_data.db")
     c = conn.cursor()
@@ -187,6 +190,7 @@ def run_sql_query(query):
     data = c.fetchall()
     conn.close()
     return [item for item in data]
+
 
 def get_total_expenses_by_month():
     query = """
@@ -197,6 +201,7 @@ def get_total_expenses_by_month():
     """
     return run_sql_query(query)
 
+
 def get_total_amount_by_item():
     query = """
         SELECT COUNT(*) id, strftime('%Y-%m', receipt_date) year_month, sum(receipt_total)
@@ -204,4 +209,12 @@ def get_total_amount_by_item():
         GROUP BY year_month
         ORDER BY year_month DESC
         """
+    return run_sql_query(query)
+
+def get_items_by_receipt_id(id):
+    query = f'''
+    SELECT *
+    FROM items
+    WHERE items.receipt_id == '{id}'
+    '''
     return run_sql_query(query)
