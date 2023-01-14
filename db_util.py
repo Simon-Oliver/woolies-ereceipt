@@ -218,3 +218,9 @@ def get_items_by_receipt_id(id):
     WHERE items.receipt_id == '{id}'
     '''
     return run_sql_query(query)
+
+global temp
+temp =0
+def increase_count():
+    temp += 1
+    return temp
