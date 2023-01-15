@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<script>
-    let test = ''
-    const buttonClick = () => fetch('http://localhost:5000/test')
-        .then(res => {
-            test = res.json()
-            console.log("Btn click")
-        })
-</script>
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
+    <script src="{{url_for('static', filename='js/index.js')}}"></script>
     <title>Title</title>
 </head>
 <body>
- <h1>Welcome to FlaskBlog</h1>
- {%for item in data %}
-    <p>{{item[1]}} - ${{item[2]}}</p>
- {% endfor %}
+<h1>Welcome to FlaskBlog</h1>
+<div id="items">
+    {%for item in data %}
+    <p id={{item[1]}}>{{item[1]}} - {{item[3]}}</p>
+    {% endfor %}
+</div>
+
+<div id="modal-1" class="jw-modal">
+    <div class="jw-modal-body">
+        <h1>A custom modal popup</h1>
+        <ul id="model-data"></ul>
+        <button onclick="closeModal()">Close</button>
+    </div>
+</div>
 </body>
 </html>

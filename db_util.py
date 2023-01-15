@@ -211,6 +211,7 @@ def get_total_amount_by_item():
         """
     return run_sql_query(query)
 
+
 def get_items_by_receipt_id(id):
     query = f'''
     SELECT *
@@ -219,8 +220,11 @@ def get_items_by_receipt_id(id):
     '''
     return run_sql_query(query)
 
-global temp
-temp =0
-def increase_count():
-    temp += 1
-    return temp
+
+def get_all_receipts():
+    query = '''
+    SELECT *
+    FROM receipt
+    '''
+    return run_sql_query(query)
+
