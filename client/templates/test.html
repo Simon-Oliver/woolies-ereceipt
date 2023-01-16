@@ -2,24 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/pico.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
-    <title>Title</title>
+    <title>Woolworths Dashboard</title>
 </head>
 <body>
-<h1>Welcome to FlaskBlog</h1>
-<div id="items">
-    {%for item in data %}
-    <p id={{item[1]}}>{{item[1]}} - {{item[3]}}</p>
-    {% endfor %}
+<div class="container">
+    <h1>Woolworths Dashboard</h1>
+    <div class="container summary">
+        <article>
+            <hgroup>
+                <h6>Annual Expenses</h6>
+                <h2>$ {{annual_total}}</h2>
+                <p>over last 12 Months</p>
+            </hgroup>
+        </article>
+        <article>
+            <hgroup>
+                <h6>This Month</h6>
+                <h2>$ {{annual_total}}</h2>
+                <p>as of today</p>
+            </hgroup>
+        </article>
+        <article>
+            <hgroup>
+                <h6>Last Month</h6>
+                <h2>$ {{annual_total}}</h2>
+                <p>spent in DEC 2022</p>
+            </hgroup>
+        </article>
+    </div>
+    <div class="receipt-list">
+        <ul id="items">
+            {%for item in data %}
+            <li data-target="modal" id={{item[1]}}>{{item[1]}} - {{item[3]}}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+
+    <dialog id="modal">
+        <article>
+            <h3>Confirm your action!</h3>
+            <ul id="model-data"></ul>
+            <footer>
+                <a id="modal-close" href="#" role="button" data-target="modal" class="secondary">Close</a>
+            </footer>
+        </article>
+    </dialog>
 </div>
 
-<div id="modal-1" class="jw-modal">
-    <div class="jw-modal-body">
-        <h1>A custom modal popup</h1>
-        <ul id="model-data"></ul>
-        <button onclick="closeModal()">Close</button>
-    </div>
-</div>
+
 </body>
 </html>

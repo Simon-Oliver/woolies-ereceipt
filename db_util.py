@@ -1,6 +1,8 @@
 import sqlite3
 import json
 from datetime import datetime
+import os
+import download
 
 conn = sqlite3.connect("data/receipt_data.db")
 c = conn.cursor()
@@ -226,5 +228,15 @@ def get_all_receipts():
     SELECT *
     FROM receipt
     '''
+    return run_sql_query(query)
+
+
+def get_annual_expenses():
+    query = """
+    SELECT SUM(receipt_total) as annual_total
+    FROM receipt
+    WHERE DATE(receipt_date) BETWEEN DATE('now', '-12 months') AND DATE('now')
+    """
+
     return run_sql_query(query)
 

@@ -1,51 +1,22 @@
-/* GENERAL STYLES
--------------------------------*/
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 20px;
+* {
+  box-sizing: border-box;
 }
 
-h1 {
-    font-weight: normal;
-    margin-top: 0;
+.receipt-list {
+    height: 30vh;
+    overflow-x: auto;
 }
 
-button {
-    padding: 7px 10px;
-    margin-right: 5px;
+.container.summary {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
 }
 
-/* MODAL STYLES
--------------------------------*/
-.jw-modal {
-    /* modals are hidden by default */
-    display: none;
-
-    /* modal container fixed across whole screen */
-    position: fixed;
-    inset: 0;
-
-    /* z-index must be higher than everything else on the page */
-    z-index: 10000;
-
-    /* semi-transparent black background exposed by padding */
-    background-color: rgba(0, 0, 0, .75);
-    padding: 40px;
-
-    /* enables scrolling for tall modals */
-    overflow: auto;
+article p{
+    margin: 0;
 }
 
-.jw-modal.open {
-    display: block;
-}
-
-.jw-modal-body {
-    padding: 20px;
-    background: #fff;
-}
-
-body.jw-modal-open {
-    /* body overflow is hidden to hide main scrollbar when modal window is open */
-    overflow: hidden;
+article hgroup {
+    margin: 0;
 }

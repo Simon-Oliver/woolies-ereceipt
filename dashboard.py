@@ -6,7 +6,8 @@ app = Flask(__name__, template_folder='client/templates', static_folder='client/
 @app.route('/')
 def index():
     data = db_util.get_all_receipts()
-    return render_template('test.html',data=data)
+    annual_total = round(db_util.get_annual_expenses()[0][0],2)
+    return render_template('test.html',data=data, annual_total=annual_total)
 
 @app.route('/items')
 def get_items():
