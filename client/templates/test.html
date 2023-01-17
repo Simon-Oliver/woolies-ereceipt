@@ -8,51 +8,92 @@
     <title>Woolworths Dashboard</title>
 </head>
 <body>
-<div class="container">
-    <h1>Woolworths Dashboard</h1>
-    <div class="container summary">
-        <article>
-            <hgroup>
-                <h6>Annual Expenses</h6>
-                <h2>$ {{annual_total}}</h2>
-                <p>over last 12 Months</p>
-            </hgroup>
-        </article>
-        <article>
-            <hgroup>
-                <h6>This Month</h6>
-                <h2>$ {{annual_total}}</h2>
-                <p>as of today</p>
-            </hgroup>
-        </article>
-        <article>
-            <hgroup>
-                <h6>Last Month</h6>
-                <h2>$ {{annual_total}}</h2>
-                <p>spent in DEC 2022</p>
-            </hgroup>
-        </article>
+<main>
+    <div class="box container">
+
+
+        <hgroup>
+            <h1>Woolworths Dashboard</h1>
+            <div class="container summary">
+                <article>
+                    <hgroup>
+                        <h6>Annual Expenses</h6>
+                        <h2>$ {{annual_total}}</h2>
+                        <p>over last 12 Months</p>
+                    </hgroup>
+                </article>
+                <article>
+                    <hgroup>
+                        <h6>This Month</h6>
+                        <h2>$ {{current_month[1]|round(2)}}</h2>
+                        <p>as of today</p>
+                    </hgroup>
+                </article>
+                <article>
+                    <hgroup>
+                        <h6>Last Month</h6>
+                        <h2>$ {{last_month[1]|round(2)}}</h2>
+                        <p>spent in {{last_month[0]}}</p>
+                    </hgroup>
+                </article>
+            </div>
+        </hgroup>
+
+        <div class="receipt-list">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Store</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody id="items">
+                {%for item in data %}
+
+                <tr data-target="modal" id={{item[1]}} data-store="{{item[7][4:]}}" data-date="{{item[3]}}"
+                    data-total="{{item[4]|round(2)}}">
+                    <td>{{item[3]}}</td>
+                    <td>{{item[7][4:]}}</td>
+                    <td>$ {{item[4]|round(2)}}</td>
+                </tr>
+
+
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        <dialog id="modal">
+            <article>
+                <hgroup>
+                    <h3 id="modal-header"></h3>
+                    <h4 id="modal-sub"></h4>
+                </hgroup>
+                <div class="modal-items">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Unit</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody id="model-data">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <footer>
+                    <a id="modal-close" href="#" role="button" data-target="modal" class="secondary">Close</a>
+                </footer>
+            </article>
+        </dialog>
     </div>
-    <div class="receipt-list">
-        <ul id="items">
-            {%for item in data %}
-            <li data-target="modal" id={{item[1]}}>{{item[1]}} - {{item[3]}}</li>
-            {% endfor %}
-        </ul>
-
-    </div>
-
-
-    <dialog id="modal">
-        <article>
-            <h3>Confirm your action!</h3>
-            <ul id="model-data"></ul>
-            <footer>
-                <a id="modal-close" href="#" role="button" data-target="modal" class="secondary">Close</a>
-            </footer>
-        </article>
-    </dialog>
-</div>
+</main>
 
 
 </body>

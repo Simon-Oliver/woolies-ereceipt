@@ -1,34 +1,34 @@
 window.onload = () => {
     const items_table = document.getElementById('items')
     items_table.addEventListener('click', getItems)
-    const modal = document.getElementById('modal')
     const modalCloseBtn = document.getElementById('modal-close')
     modalCloseBtn.addEventListener('click', toggleModal)
 }
 
 const getItems = async (e) => {
-    const id = e.target.id
+    const id = e.target.closest('tr').id
+    const store = e.target.closest('tr').getAttribute('data-store')
+    const total = e.target.closest('tr').getAttribute('data-total')
+    const date = e.target.closest('tr').getAttribute('data-date')
+
+
     const response = await fetch(`/items?id=${id}`);
     const test = await response.json()
-    console.log(test)
+
     const modelData = document.getElementById('model-data')
-    modelData.innerHTML = test.map(e => `<li>${e[2]}</li>`).join(" ")
-    // openModal('modal-1')
+    const modalHeader = document.getElementById('modal-header')
+    const modalSupHeader = document.getElementById('modal-sub')
+
+    const dateObj = new Date(date);
+    const options = {year: 'numeric', month: 'short', day: 'numeric'};
+    const dateString = dateObj.toLocaleDateString("en-AU", options)
+
+    modalHeader.innerText = `Receipt from ${dateString}`
+    modalSupHeader.innerText = `${store} — $${total}`
+
+    modelData.innerHTML = test.map(e => `<tr><td>${e[2]}</td><td>${e[3]}</td><td>${e[4]}</td><td>${e[5]}</td></tr>`).join(" ")
     toggleModal()
 }
-
-
-function openModal(id) {
-    document.getElementById(id).classList.add('open');
-    document.body.classList.add('jw-modal-open');
-}
-
-// close currently open modal
-function closeModal() {
-    document.querySelector('.jw-modal.open').classList.remove('open');
-    document.body.classList.remove('jw-modal-open');
-}
-
 window.addEventListener('load', function () {
     // close modals on background click
     document.addEventListener('click', event => {
@@ -42,5 +42,5 @@ window.addEventListener('load', function () {
 const toggleModal = (e) => {
     const modal = document.getElementById('modal')
     const isOpen = modal.hasAttribute('open') && modal.getAttribute('open') != 'false' ? true : false;
-    isOpen ? modal.close(): modal.show()
+    isOpen ? modal.close() : modal.show()
 }

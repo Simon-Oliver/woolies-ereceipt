@@ -225,8 +225,10 @@ def get_items_by_receipt_id(id):
 
 def get_all_receipts():
     query = '''
-    SELECT *
+    SELECT receipt.*, branch.title
     FROM receipt
+    INNER JOIN branch on branch.storeNo== receipt.storeNo
+    ORDER BY receipt_date DESC
     '''
     return run_sql_query(query)
 
@@ -240,3 +242,13 @@ def get_annual_expenses():
 
     return run_sql_query(query)
 
+
+def get_last_two_months():
+    query = """
+    SELECT strftime('%Y-%m', receipt_date) as year, sum(receipt_total)
+    FROM receipt
+    GROUP BY year
+    ORDER BY year DESC
+    LIMIT 2
+    """
+    return run_sql_query(query)
