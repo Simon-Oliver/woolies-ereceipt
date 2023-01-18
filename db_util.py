@@ -252,3 +252,22 @@ def get_last_two_months():
     LIMIT 2
     """
     return run_sql_query(query)
+
+def get_products_by_name(product_name:str):
+    query = f'''
+    SELECT item_name, sum(item_qty) as total_qty, item_unit, sum(item_total) as product_total
+    FROM items
+    WHERE item_name LIKE '%{product_name}%'
+    GROUP By item_name
+    ORDER by sum(item_total) DESC
+    '''
+    return run_sql_query(query)
+
+def get_products():
+    query = f'''
+    SELECT item_name, sum(item_qty) as total_qty, item_unit, sum(item_total) as product_total
+    FROM items
+    GROUP By item_name
+    ORDER by sum(item_total) DESC
+    '''
+    return run_sql_query(query)

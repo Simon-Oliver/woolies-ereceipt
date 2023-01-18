@@ -2,15 +2,31 @@
     box-sizing: border-box;
 }
 
-.box {
-    display: flex;
-    height: 80vh;
-    flex-flow: column;
+body {
+    height: 100vh;
 }
 
-.receipt-list {
+main {
+    height: 100%;
+}
+
+.box {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.table-box {
+    display: flex;
     flex-grow: 1;
     overflow-x: auto;
+    gap: 25px;
+}
+
+
+.receipt-list {
+    overflow-x: auto;
+    flex-grow: 1;
 }
 
 .container.summary {
@@ -22,6 +38,10 @@
 
 article p {
     margin: 0;
+}
+
+article {
+    padding: 25px;
 }
 
 article hgroup {
@@ -47,13 +67,16 @@ th {
 }
 
 
-
 .modal-items {
-    margin-top:var(--typography-spacing-vertical);;
-    max-height: 50vh;
+    margin-top: var(--typography-spacing-vertical);
     overflow-x: auto;
 }
 
 #modal article {
+    height: 90vh;
     background: var(--background-color);
+}
+
+#modal footer {
+    margin-top:10px;
 }

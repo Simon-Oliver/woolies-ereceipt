@@ -19,6 +19,10 @@ def get_items():
     data = db_util.get_items_by_receipt_id(receipt_id)
     return jsonify(data)
 
+@app.route('/products')
+def get_products():
+    data = db_util.get_products()
+    return jsonify(data)
 
 @app.route('/test')
 def console_log():

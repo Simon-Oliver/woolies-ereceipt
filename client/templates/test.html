@@ -39,30 +39,44 @@
             </div>
         </hgroup>
 
-        <div class="receipt-list">
-            <table>
-                <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Store</th>
-                    <th scope="col">Total</th>
-                </tr>
-                </thead>
-                <tbody id="items">
-                {%for item in data %}
 
-                <tr data-target="modal" id={{item[1]}} data-store="{{item[7][4:]}}" data-date="{{item[3]}}"
-                    data-total="{{item[4]|round(2)}}">
-                    <td>{{item[3]}}</td>
-                    <td>{{item[7][4:]}}</td>
-                    <td>$ {{item[4]|round(2)}}</td>
-                </tr>
+        <div class="table-box container">
+            <div class="receipt-list">
 
 
-                {% endfor %}
-                </tbody>
+                <input type="text" id="product-name" name="product-name" placeholder="Product name" required>
 
-            </table>
+
+                <ul id="products">
+
+                </ul>
+            </div>
+
+            <div class="receipt-list">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody id="items">
+                    {%for item in data %}
+
+                    <tr data-target="modal" id={{item[1]}} data-store="{{item[7][4:]}}" data-date="{{item[3]}}"
+                        data-total="{{item[4]|round(2)}}">
+                        <td>{{item[3]}}</td>
+                        <td>{{item[7][4:]}}</td>
+                        <td>$ {{item[4]|round(2)}}</td>
+                    </tr>
+
+
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
         </div>
 
         <dialog id="modal">
@@ -86,10 +100,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <footer>
-                    <a id="modal-close" href="#" role="button" data-target="modal" class="secondary">Close</a>
-                </footer>
             </article>
         </dialog>
     </div>
