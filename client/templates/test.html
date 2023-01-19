@@ -46,10 +46,20 @@
 
                 <input type="text" id="product-name" name="product-name" placeholder="Product name" required>
 
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Unit</th>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody id="products">
 
-                <ul id="products">
+                </tbody>
+            </table>
 
-                </ul>
             </div>
 
             <div class="receipt-list">
@@ -68,7 +78,7 @@
                         data-total="{{item[4]|round(2)}}">
                         <td>{{item[3]}}</td>
                         <td>{{item[7][4:]}}</td>
-                        <td>$ {{item[4]|round(2)}}</td>
+                        <td>${{item[4]|round(2)}}</td>
                     </tr>
 
 

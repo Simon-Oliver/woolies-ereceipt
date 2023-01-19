@@ -15,17 +15,17 @@ window.onload = async () => {
 
 const onSearchChange = (e) => {
     console.log(e.target.value)
-    const search = e.target.value
+    const search = e.target.value.toLowerCase()
     let newArr = productData
     if (search.length > 0) {
-        newArr = productData.filter(item => item[0].includes(search))
+        newArr = productData.filter(item => item[0].toLowerCase().includes(search))
     }
     renderProducts(newArr)
 }
 
 const renderProducts = (products) => {
     const productsItem = document.getElementById('products')
-    productsItem.innerHTML = products.map(e => `<li>${e[0]}</li>`).join(" ")
+    productsItem.innerHTML = products.map(e => `<tr><td>${e[0]}</td><td>${e[1].toFixed(2)}</td><td>${e[2]}</td><td>$${e[3].toFixed(2)}</td></tr>`).join(" ")
 }
 
 const getProducts = async () => {

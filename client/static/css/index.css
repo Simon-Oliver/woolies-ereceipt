@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    font-size: 16px;
 }
 
 body {
@@ -23,10 +24,10 @@ main {
     gap: 25px;
 }
 
-
 .receipt-list {
     overflow-x: auto;
     flex-grow: 1;
+    width: 50%;
 }
 
 .container.summary {
@@ -70,10 +71,11 @@ th {
 .modal-items {
     margin-top: var(--typography-spacing-vertical);
     overflow-x: auto;
+    height:85%;
 }
 
 #modal article {
-    height: 90vh;
+    max-height: 90vh;
     background: var(--background-color);
 }
 
