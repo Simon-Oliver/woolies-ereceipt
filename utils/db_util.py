@@ -2,9 +2,12 @@ import sqlite3
 import json
 from datetime import datetime
 import os
-import download
 
-conn = sqlite3.connect("data/receipt_data.db")
+ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
+db_file = os.path.join(ROOT_DIR,'data','receipt_data.db')
+
+print('==============',db_file)
+conn = sqlite3.connect(db_file)
 c = conn.cursor()
 
 
@@ -141,7 +144,7 @@ def get_data(receipt_id, items):
                 receipt_items = get_list_of_line_items(receipt_id, item)
 
     except KeyError as e:
-        with open('data/error.txt', 'a+') as error_file:
+        with open('../data/error.txt', 'a+') as error_file:
             error_file.writelines(f'{receipt_id} - Key error at {e}\n')
 
     receipt_info = (receipt_id, receipt_url, receipt_date, receipt_total, store_no, raw_data)
@@ -150,7 +153,7 @@ def get_data(receipt_id, items):
 
 
 def initialise_db():
-    conn = sqlite3.connect("data/receipt_data.db")
+    conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
     c.execute('''CREATE TABLE IF NOT EXISTS receipt
@@ -185,7 +188,7 @@ def initialise_db():
 
 
 def run_sql_query(query):
-    conn = sqlite3.connect("data/receipt_data.db")
+    conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
     c.execute(query)

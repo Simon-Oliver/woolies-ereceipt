@@ -1,6 +1,5 @@
-import download
 import os
-import db_util
+from utils import db_util, download
 
 db_util.initialise_db()
 

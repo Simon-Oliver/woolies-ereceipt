@@ -1,6 +1,6 @@
 import dotenv
 import json
-import db_util
+from utils import db_util
 import requests
 from datetime import datetime
 import os
@@ -68,9 +68,9 @@ def refresh_token(ref_token: str):
     print(refresh_response.json())
     token_data = refresh_response.json()
     os.environ['REFRESH_TOKEN'] = token_data['data']['refreshToken']
-    dotenv.set_key('.env', 'REFRESH_TOKEN', os.environ['REFRESH_TOKEN'])
+    dotenv.set_key('../.env', 'REFRESH_TOKEN', os.environ['REFRESH_TOKEN'])
     os.environ['ACCESS_TOKEN'] = token_data['data']['accessToken']
-    dotenv.set_key('.env', 'ACCESS_TOKEN', os.environ['ACCESS_TOKEN'])
+    dotenv.set_key('../.env', 'ACCESS_TOKEN', os.environ['ACCESS_TOKEN'])
 
 
 def get_list_of_receipts():
