@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
-from utils import db_util
+from utils import db_util, download
 import subprocess
+import json
 
 
 app = Flask(__name__, template_folder='client/templates', static_folder='client/static')
@@ -29,10 +30,22 @@ def get_products():
 
 
 @app.route('/test')
-def console_log():
-    print('Logging')
-    print(request.args['name'])
-    return jsonify('aces')
+def tester():
+
+    message = download.fetch_new_data()
+
+    # test_id = request.args['id']
+    # with open('./data/test.json', 'r') as file:
+    #     data_string = file.read()
+    #
+    # json_dict = json.loads(data_string)
+    # json_dict['TEST_TOKEN'] = test_id
+    #
+    # with open('./data/test.json', 'w') as out_file:
+    #     out_file.write(json.dumps(json_dict))
+    #
+    # print('Returning')
+    return jsonify(message)
 
 
 @app.route('/message')

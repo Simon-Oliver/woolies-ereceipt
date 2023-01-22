@@ -1,24 +1,29 @@
-import dotenv
-import json
-from utils import db_util
+from utils import db_util, download
 import requests
 from datetime import datetime
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
+import json
 
 receipt_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/graphql'
 token_url = 'https://prod.mobile-api.woolworths.com.au/zeus/metis/v1/rewards/token'
 
+ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
+token_file = os.path.join(ROOT_DIR, 'data', 'token.json')
+
+
 def save_raw_json_to_file():
-    refresh_token(os.environ.get("REFRESH_TOKEN"))
+    refresh_token()
     res = get_list_of_receipts()
 
     # get current date and time
     current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
 
     receipt_list = db_util.get_receipts_from_response(res)
+
+    with open(token_file, 'r') as f:
+        token = json.loads(f.read())
+        api_key = token['API_KEY']
+        access_token = token['ACCESS_TOKEN']
 
     with open(f'data/receipt-list-{current_datetime}.json', 'w+') as file:
         json.dump(receipt_list, file)
@@ -48,9 +53,9 @@ def save_raw_json_to_file():
                          "ReceiptDetailsLineItem {\n    prefixChar\n    description\n    amount\n}",
                 "variables": {
                     "receiptId": item['receipt']['receiptId']}}
-            bearer_token = f"Bearer {os.environ.get('ACCESS_TOKEN')}"
+            bearer_token = f"Bearer {access_token}"
             headers = {"Content-Type": "application/json; charset=utf-8", "authorization": bearer_token,
-                       "x-api-key": os.environ.get("API_KEY")}
+                       "x-api-key": api_key}
             response = requests.post(receipt_url, headers=headers, json=receipt_query)
             receipt_items.append(response.json())
 
@@ -61,22 +66,34 @@ def save_raw_json_to_file():
         json.dump(receipt_items, file)
 
 
-def refresh_token(ref_token: str):
-    refresh_header = {"Content-Type": "application/json; charset=utf-8", "x-api-key": os.environ.get("API_KEY")}
+# def refresh_token(ref_token: str):
+def refresh_token():
+    with open(token_file, 'r') as f:
+        token = json.loads(f.read())
+        api_key = token['API_KEY']
+        ref_token = token["REFRESH_TOKEN"]
+
+    refresh_header = {"Content-Type": "application/json; charset=utf-8", "x-api-key": api_key}
+
     refresh_body = {"refreshToken": ref_token}
     refresh_response = requests.post(token_url, headers=refresh_header, json=refresh_body)
     print(refresh_response.json())
     token_data = refresh_response.json()
-    os.environ['REFRESH_TOKEN'] = token_data['data']['refreshToken']
-    dotenv.set_key('../.env', 'REFRESH_TOKEN', os.environ['REFRESH_TOKEN'])
-    os.environ['ACCESS_TOKEN'] = token_data['data']['accessToken']
-    dotenv.set_key('../.env', 'ACCESS_TOKEN', os.environ['ACCESS_TOKEN'])
+    token['ACCESS_TOKEN'] = token_data['data']['accessToken']
+    token["REFRESH_TOKEN"] = token_data['data']['refreshToken']
+    with open(token_file, 'w') as f:
+        f.write(json.dumps(token))
 
 
 def get_list_of_receipts():
-    bearer_token = f"Bearer {os.environ.get('ACCESS_TOKEN')}"
+    with open(token_file, 'r') as f:
+        token = json.loads(f.read())
+        api_key = token['API_KEY']
+        access_token = token['ACCESS_TOKEN']
+
+    bearer_token = f"Bearer {access_token}"
     headers = {"Content-Type": "application/json; charset=utf-8", "authorization": bearer_token,
-               "x-api-key": os.environ.get("API_KEY")}
+               "x-api-key": api_key}
     receipts_query = {
         "query": "query($page: Int) {\n    rewardsActivityFeed(pageNumber: $page) {\n        list {\n    groups {\n   "
                  "     ...on RewardsActivityFeedGroup {\n            __typename\n            id\n            title\n  "
@@ -104,6 +121,10 @@ def get_list_of_receipts():
 
 
 def get_receipt_by_id(receipt_id):
+    with open(token_file, 'r') as f:
+        token = json.loads(f.read())
+        api_key = token['API_KEY']
+        access_token = token['ACCESS_TOKEN']
     try:
         receipt_query = {
             "query": "query ReceiptDetails($receiptId: String!) {\n    receiptDetails(receiptId: $receiptId) {\n      "
@@ -125,11 +146,40 @@ def get_receipt_by_id(receipt_id):
                      "receiptLineItem on ReceiptDetailsLineItem {\n    prefixChar\n    description\n    amount\n}",
             "variables": {
                 "receiptId": receipt_id}}
-        bearer_token = f"Bearer {os.environ.get('ACCESS_TOKEN')}"
+        bearer_token = f"Bearer {access_token}"
         headers = {"Content-Type": "application/json; charset=utf-8", "authorization": bearer_token,
-                   "x-api-key": os.environ.get("API_KEY")}
+                   "x-api-key": api_key}
         response = requests.post(receipt_url, headers=headers, json=receipt_query)
         return response.json()
 
     except Exception as e:
         print(e)
+
+
+def fetch_new_data():
+    download.refresh_token()
+    res = download.get_list_of_receipts()
+
+    receipt_list = db_util.get_receipts_from_response(res)
+    print(f'Found {len(receipt_list)} receipts.')
+
+    new_receipts = db_util.get_new_receipt_ids(receipt_list)
+    # The below line is used for the initialisation of the db.
+    # This is neccessary because ID's were not unique for a period of time
+    # new_receipts = [item['id'] for item in receipt_list]
+
+    print(f'{len(new_receipts)} are new receipts.')
+    for index, receipt in enumerate(receipt_list):
+        if receipt['id'] in new_receipts:
+            receipt_res = download.get_receipt_by_id(receipt['receipt']['receiptId'])
+
+            branch, receipt_info, receipt_items = db_util.get_data(receipt['id'], receipt_res)
+            db_util.add_receipt(*receipt_info)
+            db_util.add_branch(*branch)
+
+            for item in receipt_items:
+                db_util.add_item(*item)
+
+            print(f'{index}: Saved Receipt {receipt["id"]}')
+
+    return json.dumps({'status': 'success', 'message': f'{new_receipts} new receipts saved'})

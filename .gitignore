@@ -1,5 +1,5 @@
 *.json
-.env
+utils/.env
 .gitignore
 /.idea
 /venv
@@ -12,7 +12,6 @@ __pycache__/
 /client/build
 /client/.svelte-kit
 /client/package
-.env
 .env.*
 !.env.example
 vite.config.js.timestamp-*

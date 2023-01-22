@@ -5,6 +5,10 @@ window.onload = async () => {
     items_table.addEventListener('click', getItems)
     // const modalCloseBtn = document.getElementById('modal-close')
     // modalCloseBtn.addEventListener('click', toggleModal)
+
+    const testerBtn = document.getElementById('testBtn')
+    testerBtn.addEventListener('click', btnTest)
+
     const searchInput = document.getElementById('product-name')
     searchInput.addEventListener('input', onSearchChange)
 
@@ -72,4 +76,11 @@ const toggleModal = (e) => {
     const modal = document.getElementById('modal')
     const isOpen = modal.hasAttribute('open') && modal.getAttribute('open') != 'false' ? true : false;
     isOpen ? modal.close() : modal.show()
+}
+
+const btnTest = async () =>{
+    console.log("Button has been triggered")
+    const response = await fetch(`/test?id=1234`);
+    const data = await response.json()
+    console.log(data)
 }

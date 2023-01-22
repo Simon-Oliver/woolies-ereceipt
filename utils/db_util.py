@@ -6,44 +6,53 @@ import os
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 db_file = os.path.join(ROOT_DIR,'data','receipt_data.db')
 
-print('==============',db_file)
-conn = sqlite3.connect(db_file)
-c = conn.cursor()
-
-
-def commit_close():
-    conn.commit()
-    conn.close()
-
 
 def add_item(receipt_id, item_name, item_qty, item_unit, item_total, raw_data):
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
     try:
         c.execute("INSERT INTO items VALUES(null,?,?,?,?,?,?)",
                   [receipt_id, item_name, item_qty, item_unit, item_total, raw_data])
+        conn.commit()
+        conn.close()
     except Exception as e:
         print(e, f'{receipt_id} - {item_name}')
-
+        conn.close()
 
 def add_branch(store_no, title, content, division):
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
     try:
         c.execute("INSERT OR IGNORE INTO branch VALUES(null,?,?,?,?)", [store_no, title, content, division])
+        conn.commit()
+        conn.close()
     except Exception as e:
         print(e, f'Store No - {store_no}')
+        conn.close()
 
 
 def add_receipt(receipt_id, receipt_url, receipt_date, receipt_total, store_no, raw_data):
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
     try:
         c.execute("INSERT INTO receipt VALUES(null,?,?,?,?,?,?)",
                   [receipt_id, receipt_url, receipt_date, receipt_total, store_no, raw_data])
+        conn.commit()
+        conn.close()
     except Exception as e:
         print(e, f'Receipt ID - {receipt_id}')
+        conn.close()
 
 
 def get_db_receipt_ids():
+    conn = sqlite3.connect(db_file)
+    c = conn.cursor()
+
     query = "SELECT receipt_id FROM receipt"
 
     c.execute(query)
     data = c.fetchall()
+    conn.close()
     return [item[0] for item in data]
 
 

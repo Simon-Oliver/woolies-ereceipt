@@ -3,7 +3,7 @@ from utils import db_util, download
 
 db_util.initialise_db()
 
-download.refresh_token(os.environ.get("REFRESH_TOKEN"))
+download.refresh_token()
 res = download.get_list_of_receipts()
 
 receipt_list = db_util.get_receipts_from_response(res)
@@ -27,5 +27,3 @@ for index, receipt in enumerate(receipt_list):
             db_util.add_item(*item)
 
         print(f'{index}: Saved Receipt {receipt["id"]}')
-
-db_util.commit_close()
