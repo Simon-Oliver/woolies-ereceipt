@@ -29,7 +29,7 @@ def get_products():
     return jsonify(data)
 
 
-@app.route('/test')
+@app.route('/refresh')
 def tester():
 
     message = download.fetch_new_data()

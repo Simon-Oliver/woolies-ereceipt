@@ -3,11 +3,12 @@ let productData = []
 window.onload = async () => {
     const items_table = document.getElementById('items')
     items_table.addEventListener('click', getItems)
+
     // const modalCloseBtn = document.getElementById('modal-close')
     // modalCloseBtn.addEventListener('click', toggleModal)
 
-    const testerBtn = document.getElementById('testBtn')
-    testerBtn.addEventListener('click', btnTest)
+    const refreshBtn = document.getElementById('refreshBtn')
+    refreshBtn.addEventListener('click', btnRefresh)
 
     const searchInput = document.getElementById('product-name')
     searchInput.addEventListener('input', onSearchChange)
@@ -78,9 +79,14 @@ const toggleModal = (e) => {
     isOpen ? modal.close() : modal.show()
 }
 
-const btnTest = async () =>{
+const btnRefresh = async () =>{
+    const progressBar = document.getElementById('progress-bar')
+    progressBar.show()
+    // document.getElementById('indeterminate-progress').indeterminate = true;
     console.log("Button has been triggered")
-    const response = await fetch(`/test?id=1234`);
+    const response = await fetch(`/refresh`);
     const data = await response.json()
     console.log(data)
+    progressBar.close()
+    location.reload()
 }

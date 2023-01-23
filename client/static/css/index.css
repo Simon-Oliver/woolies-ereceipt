@@ -82,3 +82,32 @@ th {
 #modal footer {
     margin-top:10px;
 }
+
+#refreshBtn {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    margin: 0 0 0 12px;
+}
+
+#refreshBtn svg {
+    position: relative;
+    top: -1px;
+    opacity: 0.6;
+    fill: white;
+    transition: all 0.6s;
+}
+
+#refreshBtn svg:hover {
+    opacity: 1;
+    fill: #d81b60;
+}
+
+.title-box {
+    display: flex;
+    align-items:  center;
+}
+
+.title-box h1 {
+    margin: 0px;
+}
