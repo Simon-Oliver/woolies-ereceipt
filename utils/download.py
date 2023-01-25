@@ -77,6 +77,7 @@ def refresh_token():
 
     refresh_body = {"refreshToken": ref_token}
     refresh_response = requests.post(token_url, headers=refresh_header, json=refresh_body)
+    print(refresh_response.status_code)
     print(refresh_response.json())
     token_data = refresh_response.json()
     token['ACCESS_TOKEN'] = token_data['data']['accessToken']

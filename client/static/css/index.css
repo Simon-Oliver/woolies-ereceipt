@@ -68,15 +68,17 @@ th {
 }
 
 
-.modal-items {
-    margin-top: var(--typography-spacing-vertical);
-    overflow-x: auto;
-    height:85%;
-}
+
 
 #modal article {
     max-height: 90vh;
     background: var(--background-color);
+}
+
+.modal-items {
+    margin-top: var(--typography-spacing-vertical);
+    overflow-x: auto;
+    height: 70vh;
 }
 
 #modal footer {
